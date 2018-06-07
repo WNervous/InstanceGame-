@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<!--<meta http-equiv="Content-Security-Policy" content="img-src 'self' *.easydrawing-lens.dailyinnovation.biz">-->
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width, user-scalable=no, minimal-ui">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="full-screen" content="yes" />
+		<meta name="screen-orientation" content="portrait" />
+		<script src="https://connect.facebook.net/en_US/fbinstant.6.2.js" type="text/javascript"></script>
+		<script src="js/jquery-1.8.3.min.js" type="text/javascript"></script>
+		<script src="js/Jump.js"></script>
+
+		<style type="text/css">
+			body,
+			html,
+			#main {
+				display: flex;
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				flex-direction: column;
+				background-color: #fff;
+			}
+			
+			.banner {
+				position: relative;
+				width: 100%;
+				text-align: center;
+				height: 20%;
+			}
+			
+			.banner img {
+				width: 100%;
+				height: 100%;
+				display: block;
+				position: absolute;
+			}
+			
+			.banner img.show {
+				display: block;
+			}
+			
+			#bannerIndicator {
+				position: absolute;
+				bottom: 10px;
+				width: auto;
+			}
+			
+			.banner ul {
+				margin: auto;
+				padding: 0;
+				list-style-type: none;
+				background: green;
+				transform: translateX(-50%);
+			}
+			
+			.banner ul li {
+				width: 10px;
+				height: 10px;
+				float: left;
+				margin-right: 8px;
+				background-color: white;
+				border-radius: 50%;
+			}
+			
+			.banner ul li.active {
+				background: orange;
+			}
+			
+			.refresh {
+				display: block;
+				width: 100%;
+				height: auto;
+				top: 20%;
+				background-color: #fff;
+				box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2);
+			}
+			
+			.refresh>p {
+				float: left;
+				margin: 0;
+				padding: 10px;
+			}
+			
+			.refresh #recommend {
+				float: left;
+				color: black;
+			}
+			
+			.refresh #rightRefresh {
+				float: right;
+				color: blue;
+				text-decoration: underline;
+			}
+			/*.refresh #rightRefresh:hover {
+				text-decoration: overline;
+			}*/
+			
+			.list {
+				flex: 1;
+				overflow: scroll;
+			}
+			
+			.list .listData {
+				display: block;
+				overflow: scroll;
+			}
+			
+			.list #bottomRefresh {
+				width: 100px;
+				text-align: center;
+				margin-left: auto;
+				margin-right: auto;
+				padding: 10px;
+				color: white;
+				background-color: #442A15;
+				-moz-border-radius: 50px;
+				-webkit-border-radius: 50px;
+				border-radius: 50px;
+				box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.2);
+			}
+			
+			.list #bottomRefresh:hover {
+				background-color: #7c4e28;
+				box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
+			}
+			
+			.list::-webkit-scrollbar {
+				width: 0px;
+				height: 0px;
+			}
+			
+			#placeholder {
+				width: 100%;
+				height: 100%;
+			}
+			
+			.imgContainer {
+				width: 50%;
+				margin: auto;
+				float: left;
+			}
+			
+			.imgContainer a {
+				margin: 10px;
+				box-sizing: border-box;
+				display: block;
+				box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.2);
+			}
+			
+			.imgContainer a :hover {
+				box-sizing: border-box;
+				border: 1px solid aquamarine;
+			}
+			
+			.imgContainer img {
+				display: block;
+				width: 100%;
+				height: 100%;
+				margin: auto;
+			}
+			
+			.banner img {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+			}
+			/*#list>div:nth-child(odd) {
+				margin-right: 20px;
+			}*/
+		</style>
+		<!--描述：图片填充模版-->
+		<script type="text/template" id="imgTemplate">
+			<div class="imgContainer">
+				<a href="pager/animPlayer.html?id={#id#}" class="imgLink">
+					<img src="{#figure#}" alt="{#name#}" class="img" />
+				</a>
+			</div>
+		</script>
+		<!--描述：banner 填充模版-->
+		<script type="text/template" id="bannerTemplate">
+			<div class="bannerContainer">
+				<a href="pager/animPlayer.html?id={#id#}" class="bannerImg">
+					<img src="{#figure#}" alt="" class="img" />
+				</a>
+			</div>
+		</script>
+	</head>
+
+	<body>
+		<div id="main">
+			<div class="banner">
+				<div id="bannerData"></div>
+				<div id="bannerIndicator"></div>
+			</div>
+			<div class="refresh">
+				<p id="recommend"> Recommend</p>
+				<p id="rightRefresh">Refresh</p>
+			</div>
+			<div class="list">
+				<div class="listData">
+					<div class="imgContainer">
+						<a href="pager/animPlayer.html?id=5a65a26ea1a970000180dfe1" class="imgLink">
+							<img src="https://easydrawing-lens.dailyinnovation.biz/gallery/03e8b26716e564e7be5e9684baca7a2d" alt="Rabbit" class="img" />
+						</a>
+					</div>
+
+					<div class="imgContainer">
+						<a href="pager/animPlayer.html?id=5a3dec106e1c2d0001473a73" class="imgLink">
+							<img src="https://easydrawing-lens.dailyinnovation.biz/gallery/cb18eabaea5b0435a7f8410550df1cee" alt="Cat" class="img" />
+						</a>
+					</div>
+
+				</div>
+				<p id="bottomRefresh">Refresh</p>
+
+			</div>
+
+			<script>
+				var url = "https://easydrawing-api.dailyinnovation.biz/easydrawing/v1/images?limit=16&offset=0&type=random";
+				window.onload = function() {
+					FBInstant.initializeAsync().then(function() {
+						//						initData();
+						showProgress();
+					});
+					FBInstant.startGameAsync();
+				};
+				var cur = 0;
+				var html = "";
+				var bannerHtml = "";
+				var tpl = imgTemplate.innerHTML;
+				var bannerTpl = bannerTemplate.innerHTML;
+				var bannerData = [];
+				var timer = null;
+				var len;
+				var progresstime = null;
+
+				function fillImgTemplate(data) {
+					for(var i = 0; i < data.length; i++) {
+						html += formString(tpl, data[i]);
+					}
+					$("div .listData").html(html);
+					setImgWH();
+				}
+
+				function fillBannerTemplate(bannerData) {
+					var indcatorHtml = "";
+					for(var i = 0; i < bannerData.length; i++) {
+						var banner = bannerData[i];
+						if(i === 0) {
+							bannerHtml += "<img src=" + banner.figure + " alt='' class='show' />";
+							indcatorHtml += "<li class='active'></li>";
+						} else {
+							bannerHtml += "<img src=" + banner.figure + " alt='' class='' />";
+							indcatorHtml += "<li></li>";
+						}
+
+					}
+					indcatorHtml = "<ul>" + indcatorHtml + "</ul>";
+					$("div #bannerIndicator").html(indcatorHtml);
+					$("div #bannerData").html(bannerHtml);
+					setIndicatorMarginLeft();
+				}
+				// 正则替换 模版数据
+				function formString(str, data) {
+					return str.replace(/\{#(\w+)#\}/g, function(match, $1) {
+						return data[$1]
+					});
+				}
+
+				function refreshData() {
+					$('#bottomRefresh').hide();
+					html = "";
+					bannerHtml = "";
+					$.ajax({
+						url: url,
+						type: 'get',
+						daytype: 'text',
+						success: function(data) {
+							var datestas = data.data;
+							bannerData = datestas.bannerData.bannerList;
+							len = bannerData.length;
+							fillBannerTemplate(datestas.bannerData.bannerList);
+							fillImgTemplate(datestas.imageData.imageList);
+							$('#bottomRefresh').show();
+							$('.refresh').show();
+							showImg();
+							sessionStorage.setItem("imgdata", datestas);
+							$(".banner").hover(function() {
+								clearInterval(timer);
+							}, function() {
+								showImg();
+							});
+
+							$('.banner li').click(function() {
+								var index = $(this).index();
+								$(this).addClass('active').siblings().removeClass('active');
+								$('.banner img').eq(index).fadeIn(200).siblings("img").fadeOut(200);
+							});
+
+							$('.banner img').click(function() {
+								var banner = bannerData[$(this).index()];
+								var deepLink = banner.deepLink;
+								var newStr1 = deepLink.indexOf("market://");
+								if(newStr1 == 0) {
+									window.open("https://play.google.com/store/apps/details?id=sandbox.pixel.number.coloring.book.page.art.free&target=_blank", target = "_blank");
+									return;
+								}
+
+								var newStr2 = deepLink.indexOf("open://");
+								if(newStr2 == 0) {
+									return;
+								}
+								var newStr3 = deepLink.indexOf("easydrawingstepbystep://");
+								if(newStr3 == 0) {
+									jumpUtil.jumpTo('pager/animPlayer.html?id=' + banner.imageId);
+									return;
+								}
+							});
+						}
+					});
+				}
+
+				function initData() {
+					$('#bottomRefresh').hide();
+					html = "";
+					bannerHtml = "";
+					$.ajax({
+						url: url,
+						type: 'get',
+						daytype: 'text',
+						success: function(data) {
+							showProgress();
+							var datestas = data.data;
+							bannerData = datestas.bannerData.bannerList;
+							len = bannerData.length;
+							fillBannerTemplate(datestas.bannerData.bannerList);
+							fillImgTemplate(datestas.imageData.imageList);
+							$('#bottomRefresh').show();
+							$('.refresh').show();
+							showImg();
+
+							$(".banner").hover(function() {
+								clearInterval(timer);
+							}, function() {
+								showImg();
+							});
+
+							$('.banner li').click(function() {
+								var index = $(this).index();
+								$(this).addClass('active').siblings().removeClass('active');
+								$('.banner img').eq(index).fadeIn(200).siblings("img").fadeOut(200);
+							});
+
+							$('.banner img').click(function() {
+								var banner = bannerData[$(this).index()];
+								var deepLink = banner.deepLink;
+								var newStr1 = deepLink.indexOf("market://");
+								if(newStr1 == 0) {
+									window.open("https://play.google.com/store/apps/details?id=sandbox.pixel.number.coloring.book.page.art.free&target=_blank", target = "_blank");
+									return;
+								}
+
+								var newStr2 = deepLink.indexOf("open://");
+								if(newStr2 == 0) {
+									return;
+								}
+								var newStr3 = deepLink.indexOf("easydrawingstepbystep://");
+								if(newStr3 == 0) {
+									jumpUtil.jumpTo('pager/animPlayer.html?id=' + banner.imageId);
+									return;
+								}
+							});
+						}
+					});
+				}
+
+				function showImg() {
+					timer = setInterval(function() {
+						cur++;
+						if(cur >= len) {
+							cur = 0;
+						}
+						$(".banner img").eq(cur).fadeIn(200).siblings("img").fadeOut(200);
+						$(".banner li ").eq(cur).addClass("active").siblings().removeClass("active");
+
+					}, 2000);
+				}
+
+				function showProgress() {
+					var progress = 0;
+					progresstime = setInterval(function() {
+						progress++;
+						if(progress > 100) {
+							clearInterval(progresstime);
+						} else {
+							FBInstant.setLoadingProgress(progress);
+						}
+
+					}, 20);
+				}
+
+				$('#rightRefresh').click(function() {
+					refreshData();
+				});
+
+				$('#bottomRefresh').click(function() {
+					refreshData();
+				});
+
+				function setImgWH() {
+					var width = $("body").width();
+					$(".imgContainer a").css("width", (parseInt(width) - 40) / 2 + "px");
+					$(".imgContainer a").css("height", (parseInt(width) - 40) / 2 + "px");;
+				}
+
+				function setIndicatorMarginLeft() {
+					var bannerW = $('.banner').width() / 2;
+					$('#bannerIndicator').css("left", bannerW);
+				}
+			</script>
+	</body>
+
+</html>

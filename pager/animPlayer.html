@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+
+		<!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src * ;img-src *">-->
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width, user-scalable=no, minimal-ui">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="full-screen" content="yes" />
+		<meta name="screen-orientation" content="portrait" />
+		<title>Player Pager</title>
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+		<script src="../js/Jump.js" type="text/javascript"></script>
+		<script type="text/javascript" src="../js/lottie.js"></script>
+
+		<style type="text/css">
+			* {
+				margin: 0;
+			}
+			
+			#main {
+				display: flex;
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				flex-direction: column;
+				background-color: white;
+			}
+			
+			#topBar {
+				display: flex;
+				width: 100%;
+				box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2);
+			}
+			
+			#topBar img {
+				width: 30px;
+				height: 30px;
+				float: left;
+				height: 25px;
+				padding: 15px;
+			}
+			
+			#topBar p {
+				color: black;
+				float: left;
+				width: auto;
+				flex: 1;
+				height: 100%;
+				line-height: 100%;
+				margin: auto;
+				font-size: 16px;
+			}
+			
+			#animation {
+				display: flex;
+				width: 100%;
+				flex: 1;
+			}
+			
+			#animationData {
+				position: relative;
+				-webkit-align-self: center;
+				width: 100%;
+				margin: 10px;
+				flex: 1;
+				background-color: white;
+				box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.2);
+			}
+			
+			#animationData .colorFulImg {
+				display: block;
+				position: absolute;
+				width: 100%;
+			}
+			
+			#bottom {
+				display: flex;
+				width: 100%;
+				text-align: center;
+				margin-bottom: 20px;
+				text-align: center;
+			}
+			
+			#bottom img {
+				align-self: center;
+				text-align: center;
+				width: 25px;
+				padding: 10px;
+				margin: 20px;
+				background-color: #442A15;
+				-moz-border-radius: 50px;
+				-webkit-border-radius: 50px;
+				border-radius: 50px;
+				height: 25px;
+				box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
+			}
+			
+			#bottom img:hover {
+				background-color: #7c4e28;
+				box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
+			}
+			
+			#bottom p {
+				text-align: center;
+				height: 100%;
+				line-height: 100%;
+				margin: auto;
+				flex: 1;
+			}
+			
+			#colorImg {
+				display: flex;
+				height: auto;
+				margin-top: 20px;
+				width: 100%;
+			}
+			
+			#colorImg img {
+				width: 25px;
+				height: 25px;
+				margin-left: 10px;
+				margin-right: 10px;
+				padding: 10px;
+				background-color: #442A15;
+				-moz-border-radius: 50px;
+				-webkit-border-radius: 50px;
+				border-radius: 50px;
+				box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
+			}
+			
+			#colorImg img:hover {
+				background-color: #7c4e28;
+				box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
+			}
+			
+			#colorImg p {
+				flex: 1;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div id="main">
+			<div id="topBar">
+				<a href="../index.html">
+					<img src="../img/ic_back_unselect.png" />
+				</a>
+				<p class="title"></p>
+			</div>
+			<div id="colorImg">
+				<img class="girdShow" src="../img/ic_grid.png" />
+				<p class="blank"></p>
+				<img class="colorImgShow" src="../img/ic_color.png" />
+			</div>
+			<div id="animation">
+				<div id="animationData">
+					<img class="colorFulImg" src="" alt="" />
+				</div>
+			</div>
+			<div id="bottom">
+				<div class="left"><img src="../img/ic_chevron_left_white.png"></img>
+				</div>
+				<p class="step">Loading...</p>
+				<div class="right"><img src="../img/ic_chevron_right_white.png"></img>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			var stepArrays;
+			var index = 0;
+			var currentStep = 0;
+			var totalSteps;
+			var url = "https://easydrawing-api.dailyinnovation.biz/easydrawing/v1/image/";
+			var animationItem;
+			var colorfulImageLength = 0;
+			var imgId = "";
+			$(function() {
+				window.url;
+				var id = jumpUtil.params("id");
+				url += id;
+				$.ajax({
+					url: url,
+					type: 'get',
+					daytype: 'text',
+					success: function(data) {
+						var datestas = data.data;
+						stepArrays = datestas.steps;
+						totalSteps = stepArrays.length;
+						$('.title').text(datestas.name);
+						colorfulImageLength = datestas.colorImageList.length;
+						if(colorfulImageLength > 0) {
+							imgId = datestas.colorImageList[0];
+							$('#animationData .colorFulImg').attr('src', datestas.colorImageList[0])
+						} else {
+							imgId = datestas.figure;
+						}
+						var animationJson = datestas.animation;
+						animationItem = player(animationJson);
+						animationItem.setSubframe(false);
+						animationItem.addEventListener('DOMLoaded', function() {
+							nextClick();
+						});
+					}
+				});
+
+				$(".left").click(function() {
+					animationItem.setSpeed(4);
+					previousClick();
+				});
+
+				$(".right").click(function() {
+					animationItem.setSpeed(1);
+					nextClick();
+				});
+
+//				$('#topBar img').click(function() {
+//					console.log("back click");
+//					history.back();
+//				});
+
+				$('#colorImg .girdShow').click(function() {
+					var src = $(this).attr("src");
+					if(src == "../img/ic_grid.png") {
+						$('#animationData').css('background-image', 'url(../img/bg_grid.png)');
+						$(this).attr('src', '../img/ic_grid_blank.png')
+					} else {
+						$('#animationData').css('background-image', 'url(null)');
+						$(this).attr('src', '../img/ic_grid.png')
+
+					}
+				})
+
+				$('#colorImg .colorImgShow').click(function() {
+					var src = $(this).attr("src");
+					if(src == "../img/ic_color.png") {
+						$(this).attr('src', '../img/ic_color_blank.png')
+						$('#animationData .colorFulImg').show();
+					} else {
+						$(this).attr('src', '../img/ic_color.png')
+						$('#animationData .colorFulImg').hide();
+					}
+				});
+				$('#colorImg .colorImgShow').hide();
+				$('#animationData .colorFulImg').hide();
+			});
+
+			function player(animationJson) {
+				return lottie.loadAnimation({
+					animationData: animationJson,
+					autoplay: false,
+					looper: true,
+					renderer: 'canvas',
+					container: document.getElementById("animationData")
+				});
+			}
+
+			function stopPlay() {
+				animationItem.stop();
+			}
+
+			function previousClick() {
+				$('#colorImg .colorImgShow').attr('src', '../img/ic_color.png')
+				$('#colorImg .colorImgShow').hide();
+				$('#animationData .colorFulImg').hide();
+				currentStep--;
+				if(currentStep < 0) {
+					currentStep = 0;
+					return;
+				}
+				var lastStep = parseInt(stepArrays[currentStep + 1]);
+				var thisStep = parseInt(stepArrays[currentStep]);
+				animationItem.playSegments([lastStep, thisStep], true);
+				setStep(currentStep);
+			}
+
+			function nextClick() {
+				if(currentStep > totalSteps) {
+					alert(currentStep);
+					return;
+				}
+
+				var thisStep = parseInt(stepArrays[currentStep]);
+				var nextStep;
+				currentStep++;
+
+				if(currentStep == totalSteps) {
+					currentStep = totalSteps;
+					nextStep = thisStep;
+					if(colorfulImageLength > 0) {
+						$('#colorImg .colorImgShow').show();
+					}
+					animationItem.playSegments([thisStep, nextStep], true);
+				} else if(currentStep > totalSteps) {
+					currentStep = totalSteps;
+					window.location.href = 'result.html?img=' + imgId;
+
+				} else {
+					nextStep = parseInt(stepArrays[currentStep]) + 1;
+					animationItem.playSegments([thisStep, nextStep], true);
+				}
+				setStep(currentStep);
+			}
+
+			function setStep(step) {
+				$('.step').text(step + "/" + totalSteps);
+			}
+			var animationWidth = $('#animationData').width();
+			$('#animationData').height(animationWidth);
+		</script>
+	</body>
+
+</html>

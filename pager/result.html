@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 
-		<!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://easydrawing-lens.dailyinnovation.biz 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src * ;img-src *">-->
+		<meta http-equiv="Content-Security-Policy" content="img-src 'self' *.easydrawing-lens.dailyinnovation.biz">
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width, user-scalable=no, minimal-ui">
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="full-screen" content="yes" />
@@ -82,7 +82,7 @@
 				$('.shareimg').hide();
 				var str = jumpUtil.params("img");
 				toDataURL(str, function(base64Picture) {
-					base64Pic=base64Picture;
+					base64Pic = base64Picture;
 					$('.shareimg').show();
 				});
 				$('.finishedimg').attr("src", str);
@@ -96,7 +96,7 @@
 						image: base64Pic,
 						text: 'Come and Play it.'
 					}).then(function() {
-//						alert("share success");
+						//						alert("share success");
 					});
 				});
 			});

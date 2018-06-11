@@ -229,12 +229,19 @@
 					for(var i = 0; i < data.length; i++) {
 						var detail = data[i];
 						var img = getImageLastInfo(detail.figure);
-						html += "<div class='imgContainer'>" + " <a href = 'pager/animPlayer.html?id=" + detail.id + " class='imgLink'>" + "<img src=" + img + " alt=" + detail.name + " class='img'/></a></div>"
+						//						html += "div class='imgContainer'>" + 
+						//						"<a "
+						//						"</div>"
+
+						html += "<div class='imgContainer'>" + " <a href = pager/animPlayer.html?id=" + detail.id + " class=imgLink>" + "<img src=" + img + " alt=" + detail.name + " class='img'/></a></div>"
 						//						html += formString(tpl, data[i]);
 					}
 					console.log(html);
 					$("div .listData").html(html);
 					setImgWH();
+					if(window.localStorage) {
+						localStorage.setItem("data", html);
+					}
 				}
 
 				function fillBannerTemplate(bannerData) {
@@ -255,6 +262,7 @@
 					$("div #bannerIndicator").html(indcatorHtml);
 					$("div #bannerData").html(bannerHtml);
 					setIndicatorMarginLeft();
+
 				}
 				// 正则替换 模版数据
 				function formString(str, data) {
@@ -264,8 +272,8 @@
 				}
 
 				function getImageLastInfo(firgure) {
-					var test = firgure.split("/");
-					return "https://d2yuyqgdmdg5tq.cloudfront.net/gallery/" + test[4];
+					var img = firgure.split("/");
+					return "https://d2yuyqgdmdg5tq.cloudfront.net/gallery/" + img[4];
 				}
 
 				function refreshData(isInitial) {
@@ -276,7 +284,6 @@
 					if(isInitial) {
 						showProgress();
 					}
-
 					$.ajax({
 						url: url,
 						type: 'get',
@@ -292,9 +299,6 @@
 					var strins = JSON.stringify(data);
 					//					console.log(strins);
 					var datestas = data.data;
-					//					if(window.localStorage) {
-					//						localStorage.setItem("data", strins);
-					//					}
 					bannerData = datestas.bannerData.bannerList;
 					len = bannerData.length;
 					fillBannerTemplate(datestas.bannerData.bannerList);

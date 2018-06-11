@@ -69,7 +69,7 @@
 				<img src="../img/ic_back_unselect.png" />
 			</div>
 			<div class="share">
-				<img class="finishedimg" src="https://easydrawing-lens.dailyinnovation.biz/gallery/03e8b26716e564e7be5e9684baca7a2d" alt="shareimg"/>
+				<img class="finishedimg" src="" alt="shareimg" />
 				<img class="shareimg" src="../img/share_normal.png" />
 				<!--<p>share share share </p>-->
 			</div>
@@ -81,6 +81,7 @@
 			$(function() {
 				$('.shareimg').hide();
 				var str = jumpUtil.params("img");
+				console.log(str);
 				toDataURL(str, function(base64Picture) {
 					base64Pic = base64Picture;
 					$('.shareimg').show();

@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 
-		<meta http-equiv="Content-Security-Policy" content="img-src 'self' *.easydrawing-lens.dailyinnovation.biz">
+
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width, user-scalable=no, minimal-ui">
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="full-screen" content="yes" />
@@ -46,7 +46,7 @@
 			#container .finishedimg {
 				width: 100%;
 				height: 100%;
-				/*border: gold 1px solid;*/
+				border: gold 1px solid;
 				box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.2);
 			}
 			
@@ -69,7 +69,7 @@
 				<img src="../img/ic_back_unselect.png" />
 			</div>
 			<div class="share">
-				<img class="finishedimg" src="http://easydrawing-lens.dailyinnovation.biz/gallery/03e8b26716e564e7be5e9684baca7a2d" />
+				<img class="finishedimg" src="https://easydrawing-lens.dailyinnovation.biz/gallery/03e8b26716e564e7be5e9684baca7a2d" alt="shareimg"/>
 				<img class="shareimg" src="../img/share_normal.png" />
 				<!--<p>share share share </p>-->
 			</div>
@@ -94,11 +94,12 @@
 					FBInstant.shareAsync({
 						intent: 'REQUEST',
 						image: base64Pic,
-						text: 'Come and Play it.'
+						text: 'Come and Join us.'
 					}).then(function() {
 						//						alert("share success");
 					});
 				});
+				
 			});
 
 			function toDataURL(url, callback) {

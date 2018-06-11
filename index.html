@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<title></title>
-		<meta http-equiv="Content-Security-Policy" content="img-src 'self' *.easydrawing-lens.dailyinnovation.biz">
+		<!--<meta http-equiv="Content-Security-Policy" content="media-src 'self' *.dailyinnovation.biz *.amazonaws.com">-->
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width, user-scalable=no, minimal-ui">
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="full-screen" content="yes" />
@@ -184,9 +184,9 @@
 		<!--描述：banner 填充模版-->
 		<script type="text/template" id="bannerTemplate">
 			<div class="bannerContainer">
-				<a href="pager/animPlayer.html?id={#id#}" class="bannerImg">
-					<img src="{#figure#}" alt="" class="img" />
-				</a>
+				<!--<a href="pager/animPlayer.html?id={#id#}" class="bannerImg">-->
+				<img src="{#figure#}" alt="" class="img" />
+				<!--</a>-->
 			</div>
 		</script>
 	</head>
@@ -205,13 +205,14 @@
 				<div class="listData">
 					<div class="imgContainer">
 						<a href="pager/animPlayer.html?id=5a65a26ea1a970000180dfe1" class="imgLink">
-							<img src="https://easydrawing-lens.dailyinnovation.biz/gallery/03e8b26716e564e7be5e9684baca7a2d" alt="Rabbit" class="img" />
+							<img src="https://s3.amazonaws.com/img.idailybread.com/easydrawing/image/animal_1.jpg" alt="Rabbit" class="img" />
+							<!--<img src="https://easydrawing-lens.dailyinnovation.biz/gallery/cb18eabaea5b0435a7f8410550df1cee" alt="Rabbit" class="img" />-->
 						</a>
 					</div>
 
 					<div class="imgContainer">
 						<a href="pager/animPlayer.html?id=5a3dec106e1c2d0001473a73" class="imgLink">
-							<img src="https://easydrawing-lens.dailyinnovation.biz/gallery/cb18eabaea5b0435a7f8410550df1cee" alt="Cat" class="img" />
+							<img src="https://d2yuyqgdmdg5tq.cloudfront.net/gallery/cb18eabaea5b0435a7f8410550df1cee" alt="Cat" class="img" />
 						</a>
 					</div>
 
@@ -223,9 +224,9 @@
 			<script>
 				var url = "https://easydrawing-api.dailyinnovation.biz/easydrawing/v1/images?limit=16&offset=0&type=random";
 				window.onload = function() {
+					refreshData(true);
 					FBInstant.initializeAsync().then(function() {
-						//						initData();
-						showProgress();
+						//						refreshData(true);
 					});
 					FBInstant.startGameAsync();
 				};
@@ -272,111 +273,74 @@
 					});
 				}
 
-				function refreshData() {
+				function refreshData(isInitial) {
+					clearInterval(timer);
 					$('#bottomRefresh').hide();
 					html = "";
 					bannerHtml = "";
+					if(isInitial) {
+						showProgress();
+					}
+
 					$.ajax({
 						url: url,
 						type: 'get',
-						daytype: 'text',
+						daytype: 'json',
 						success: function(data) {
-							var datestas = data.data;
-							bannerData = datestas.bannerData.bannerList;
-							len = bannerData.length;
-							fillBannerTemplate(datestas.bannerData.bannerList);
-							fillImgTemplate(datestas.imageData.imageList);
-							$('#bottomRefresh').show();
-							$('.refresh').show();
-							showImg();
-							sessionStorage.setItem("imgdata", datestas);
-							$(".banner").hover(function() {
-								clearInterval(timer);
-							}, function() {
-								showImg();
-							});
-
-							$('.banner li').click(function() {
-								var index = $(this).index();
-								$(this).addClass('active').siblings().removeClass('active');
-								$('.banner img').eq(index).fadeIn(200).siblings("img").fadeOut(200);
-							});
-
-							$('.banner img').click(function() {
-								var banner = bannerData[$(this).index()];
-								var deepLink = banner.deepLink;
-								var newStr1 = deepLink.indexOf("market://");
-								if(newStr1 == 0) {
-									window.open("https://play.google.com/store/apps/details?id=sandbox.pixel.number.coloring.book.page.art.free&target=_blank", target = "_blank");
-									return;
-								}
-
-								var newStr2 = deepLink.indexOf("open://");
-								if(newStr2 == 0) {
-									return;
-								}
-								var newStr3 = deepLink.indexOf("easydrawingstepbystep://");
-								if(newStr3 == 0) {
-									jumpUtil.jumpTo('pager/animPlayer.html?id=' + banner.imageId);
-									return;
-								}
-							});
+							handlerData(data);
 						}
 					});
+
 				}
 
-				function initData() {
-					$('#bottomRefresh').hide();
-					html = "";
-					bannerHtml = "";
-					$.ajax({
-						url: url,
-						type: 'get',
-						daytype: 'text',
-						success: function(data) {
-							showProgress();
-							var datestas = data.data;
-							bannerData = datestas.bannerData.bannerList;
-							len = bannerData.length;
-							fillBannerTemplate(datestas.bannerData.bannerList);
-							fillImgTemplate(datestas.imageData.imageList);
-							$('#bottomRefresh').show();
-							$('.refresh').show();
-							showImg();
+				function handlerData(data) {
+					var strins = JSON.stringify(data);
+					console.log(strins);
+					var datestas = data.data;
+					if(window.localStorage) {
+						localStorage.setItem("data", strins);
+					}
+					bannerData = datestas.bannerData.bannerList;
+					len = bannerData.length;
+					fillBannerTemplate(datestas.bannerData.bannerList);
+					fillImgTemplate(datestas.imageData.imageList);
+					$('#bottomRefresh').show();
+					$('.refresh').show();
+					showImg();
+					sessionStorage.setItem("imgdata", datestas);
+					$(".banner").hover(function() {
+						clearInterval(timer);
+					}, function() {
+						showImg();
+					});
 
-							$(".banner").hover(function() {
-								clearInterval(timer);
-							}, function() {
-								showImg();
-							});
+					$('.banner li').click(function() {
+						var index = $(this).index();
+						$(this).addClass('active').siblings().removeClass('active');
+						$('.banner img').eq(index).fadeIn(200).siblings("img").fadeOut(200);
+					});
 
-							$('.banner li').click(function() {
-								var index = $(this).index();
-								$(this).addClass('active').siblings().removeClass('active');
-								$('.banner img').eq(index).fadeIn(200).siblings("img").fadeOut(200);
-							});
+					$('.banner img').click(function() {
+						var banner = bannerData[$(this).index()];
+						var deepLink = banner.deepLink;
+						var newStr1 = deepLink.indexOf("market://");
+						if(newStr1 == 0) {
+							//									var a = deepLink.split("=");
+							//									window.open("https://play.google.com/store/apps/details?id=" + a[1] + "&target=_blank", target = "_blank");
+							return;
+						}
 
-							$('.banner img').click(function() {
-								var banner = bannerData[$(this).index()];
-								var deepLink = banner.deepLink;
-								var newStr1 = deepLink.indexOf("market://");
-								if(newStr1 == 0) {
-									window.open("https://play.google.com/store/apps/details?id=sandbox.pixel.number.coloring.book.page.art.free&target=_blank", target = "_blank");
-									return;
-								}
-
-								var newStr2 = deepLink.indexOf("open://");
-								if(newStr2 == 0) {
-									return;
-								}
-								var newStr3 = deepLink.indexOf("easydrawingstepbystep://");
-								if(newStr3 == 0) {
-									jumpUtil.jumpTo('pager/animPlayer.html?id=' + banner.imageId);
-									return;
-								}
-							});
+						var newStr2 = deepLink.indexOf("open://");
+						if(newStr2 == 0) {
+							return;
+						}
+						var newStr3 = deepLink.indexOf("easydrawingstepbystep://");
+						if(newStr3 == 0) {
+							jumpUtil.jumpTo('pager/animPlayer.html?id=' + banner.imageId);
+							return;
 						}
 					});
+
 				}
 
 				function showImg() {
@@ -405,11 +369,11 @@
 				}
 
 				$('#rightRefresh').click(function() {
-					refreshData();
+					refreshData(false);
 				});
 
 				$('#bottomRefresh').click(function() {
-					refreshData();
+					refreshData(false);
 				});
 
 				function setImgWH() {

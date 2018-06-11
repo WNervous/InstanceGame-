@@ -202,22 +202,7 @@
 				<p id="rightRefresh">Refresh</p>
 			</div>
 			<div class="list">
-				<div class="listData">
-
-					<div class="imgContainer">
-						<a href="pager/animPlayer.html?id=5a65a26ea1a970000180dfe1" class="imgLink">
-							<img src="https://s3.amazonaws.com/img.idailybread.com/easydrawing/image/animal_1.jpg" alt="Rabbit" class="img" />
-							<!--<img src="https://easydrawing-lens.dailyinnovation.biz/gallery/cb18eabaea5b0435a7f8410550df1cee" alt="Rabbit" class="img" />-->
-						</a>
-					</div>
-
-					<div class="imgContainer">
-						<a href="pager/animPlayer.html?id=5a3dec106e1c2d0001473a73" class="imgLink">
-							<img src="https://d2yuyqgdmdg5tq.cloudfront.net/gallery/cb18eabaea5b0435a7f8410550df1cee" alt="Cat" class="img" />
-						</a>
-					</div>
-
-				</div>
+				<div class="listData"></div>
 				<p id="bottomRefresh">Refresh</p>
 
 			</div>
@@ -225,9 +210,8 @@
 			<script>
 				var url = "https://easydrawing-api.dailyinnovation.biz/easydrawing/v1/images?limit=16&offset=0&type=random";
 				window.onload = function() {
-					refreshData(true);
 					FBInstant.initializeAsync().then(function() {
-						//						refreshData(true);
+						refreshData(true);
 					});
 					FBInstant.startGameAsync();
 				};

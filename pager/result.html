@@ -126,6 +126,7 @@
 						$('.shareimg').show();
 					}
 				});
+				pushHistory();
 				$('.shareimg').hide();
 
 				var str = getQueryString("img");
@@ -177,6 +178,18 @@
 				var r = window.location.search.substr(1).match(reg);
 				if(r != null) return unescape(r[2]);
 				return null;
+			}
+			
+			window.addEventListener("popstate", function(e) {
+				window.history.go(-2);
+			}, false);
+
+			function pushHistory() {
+				var state = {
+					title: "title",
+					url: "#"
+				};
+				window.history.pushState(state, "title", "#");
 			}
 		</script>
 	</body>

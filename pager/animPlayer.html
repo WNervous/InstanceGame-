@@ -26,19 +26,6 @@
 				background-color: white;
 			}
 			
-			#loadingContainer {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				width: 100%;
-				height: 100%;
-				position: absolute;
-			}
-			
-			#loadingContainer .loading {
-				height: 50px;
-			}
-			
 			#topBar {
 				display: flex;
 				width: 100%;
@@ -68,6 +55,18 @@
 				display: flex;
 				width: 100%;
 				flex: 1;
+				justify-content: center;
+				align-items: center;
+			}
+			
+			#loadingContainer {
+				position: absolute;
+				display: flex;
+				position: absolute;
+			}
+			
+			#loadingContainer .loading {
+				height: 50px;
 			}
 			
 			#animationData {
@@ -78,6 +77,12 @@
 				flex: 1;
 				background-color: white;
 				box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.2);
+			}
+			
+			#data {
+				display: block;
+				position: absolute;
+				width: 100%;
 			}
 			
 			#animationData img {
@@ -157,9 +162,6 @@
 		<div id="main">
 			<div id="topBar">
 				<img src="../img/ic_back_unselect.png" />
-				<!--<a href="../index.html">
-					
-				</a>-->
 				<p class="title"></p>
 			</div>
 			<div id="colorImg">
@@ -171,6 +173,11 @@
 				<div id="animationData">
 					<img class="colorFulImg" src="" alt="" />
 					<img class="dashImg" src="" alt="" />
+					<div id="data"></div>
+				</div>
+
+				<div id="loadingContainer">
+					<img class="loading" src="../img/loader.gif" />
 				</div>
 
 			</div>
@@ -180,9 +187,6 @@
 				<p class="step">Loading...</p>
 				<div class="right"><img src="../img/ic_chevron_right_white.png"></img>
 				</div>
-			</div>
-			<div id="loadingContainer">
-				<img class="loading" src="../img/loader.gif" />
 			</div>
 		</div>
 
@@ -210,11 +214,11 @@
 						stepArrays = datestas.steps;
 						totalSteps = stepArrays.length;
 						$('.title').text(datestas.name);
-						$('#animationData .dashImg').attr('src', datestas.dashImg);
+						$('#animation .dashImg').attr('src', getImageLastInfo(datestas.dashImg));
 						colorfulImageLength = datestas.colorImageList.length;
 						if(colorfulImageLength > 0) {
 							imgId = getImageLastInfo(datestas.colorImageList[0]);
-							$('#animationData .colorFulImg').attr('src', imgId)
+							$('#animation .colorFulImg').attr('src', imgId)
 						} else {
 							imgId = getImageLastInfo(datestas.figure);
 						}
@@ -224,6 +228,7 @@
 						animationItem.addEventListener('DOMLoaded', function() {
 							nextClick();
 						});
+
 					}
 				});
 
@@ -263,10 +268,17 @@
 						$('#animationData .colorFulImg').hide();
 					}
 				});
-		
+
 				$('#colorImg .colorImgShow').hide();
+				$('.girdShow').css('visibility', 'hidden');
 				$('#animationData .colorFulImg').hide();
 				$('#loadingContainer').show();
+
+				pushHistory();
+				//jquery
+				$('.girdShow').load(function() {
+					$('.girdShow').css('visibility', 'visible');
+				});
 			});
 
 			function player(animationJson) {
@@ -275,7 +287,7 @@
 					autoplay: false,
 					looper: true,
 					renderer: 'canvas',
-					container: document.getElementById("animationData")
+					container: document.getElementById("data")
 				});
 			}
 
@@ -341,8 +353,22 @@
 			function setStep(step) {
 				$('.step').text(step + "/" + totalSteps);
 			}
+
 			var animationWidth = $('#animationData').width();
 			$('#animationData').height(animationWidth);
+			$('#data').height(animationWidth);
+
+			window.addEventListener("popstate", function(e) {
+				window.history.go(-1);
+			}, false);
+
+			function pushHistory() {
+				var state = {
+					title: "title",
+					url: "#"
+				};
+				window.history.pushState(state, "title", "#");
+			}
 		</script>
 	</body>
 

@@ -45,14 +45,14 @@
 				margin-right: 30px;
 				align-items: center;
 				flex-direction: column;
-				background-color: white;
+				background-color: azure;
 				border-radius: 4px;
 				box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2);
 			}
 			
 			.loading {
-				width: 50px;
-				height: 50px;
+				width: 40px;
+				height: 40px;
 			}
 			
 			.loadingTv {
@@ -64,7 +64,7 @@
 				position: relative;
 				width: 100%;
 				text-align: center;
-				height: 20%;
+				height: 22%;
 				box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2);
 			}
 			
@@ -104,35 +104,6 @@
 			
 			.banner ul li.active {
 				background: orange;
-			}
-			
-			.refresh {
-				display: block;
-				width: 100%;
-				height: auto;
-				top: 20%;
-				background-color: #fff;
-				box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2);
-			}
-			
-			.refresh>p {
-				float: left;
-				margin: 0;
-				padding: 10px;
-			}
-			
-			.refresh #recommend {
-				float: left;
-				color: black;
-			}
-			
-			.refresh #rightRefresh {
-				float: right;
-				color: blue;
-			}
-			
-			.refresh #rightRefresh:hover {
-				text-decoration: underline;
 			}
 			
 			.list {
@@ -204,9 +175,6 @@
 				width: 100%;
 				height: 100%;
 			}
-			/*#list>div:nth-child(odd) {
-				margin-right: 20px;
-			}*/
 		</style>
 		<!--描述：图片填充模版-->
 		<script type="text/template" id="imgTemplate">
@@ -219,9 +187,7 @@
 		<!--描述：banner 填充模版-->
 		<script type="text/template" id="bannerTemplate">
 			<div class="bannerContainer">
-				<!--<a href="pager/animPlayer.html?id={#id#}" class="bannerImg">-->
 				<img src="{#figure#}" alt="" class="img" />
-				<!--</a>-->
 			</div>
 		</script>
 	</head>
@@ -233,10 +199,7 @@
 				<div id="bannerData"></div>
 				<div id="bannerIndicator"></div>
 			</div>
-			<!--<div class="refresh">
-				<p id="recommend"> Recommend</p>
-				<p id="rightRefresh">Refresh</p>
-			</div>-->
+
 			<div class="list">
 				<div class="listData"></div>
 				<p id="bottomRefresh">Refresh</p>
@@ -250,19 +213,32 @@
 
 		</div>
 		<script>
-			$('.loadingContainer').hide();
 			var url = "https://easydrawing-api.dailyinnovation.biz/easydrawing/v1/images?limit=16&offset=0&type=random";
 			window.onload = function() {
 				if(loadingTvTimer != null) {
 					clearInterval(loadingTvTimer);
 				}
-//				setLoadingTv();
+
 				$('.loadingContainer').hide();
-				refreshData(true);
+//				refreshData(false);
 				FBInstant.initializeAsync().then(function() {
 					refreshData(true);
 				});
-				FBInstant.startGameAsync();
+				FBInstant.startGameAsync().then(function() {
+					FBInstant.canCreateShortcutAsync()
+						.then(function(canCreateShortcut) {
+							if(canCreateShortcut) {
+								FBInstant.createShortcutAsync()
+									.then(function() {
+										console.log('Shortcut created');
+									})
+									.catch(function() {
+										console.log('Shortcut not created');
+										// Shortcut not created
+									});
+							}
+						});
+				});
 			};
 
 			var cur = 0;
@@ -276,7 +252,7 @@
 			var progresstime = null;
 			const dataKey = "listKey";
 			var base64Pic = "";
-			var loadingTv = ["Loading drawing…", "Optimizing size…", "Optimizing quality…","Resize drawing…"];
+			var loadingTv = ["Loading drawing…", "Optimizing size…", "Optimizing quality…", "Resize drawing…"];
 			var loadingTvTimer;
 
 			function fillImgTemplate(data) {

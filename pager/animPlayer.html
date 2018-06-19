@@ -254,7 +254,6 @@
 					} else {
 						$('#animationData').css('background-image', 'url(null)');
 						$(this).attr('src', '../img/ic_grid.png')
-
 					}
 				})
 
@@ -274,7 +273,6 @@
 				$('#animationData .colorFulImg').hide();
 				$('#loadingContainer').show();
 
-				pushHistory();
 				//jquery
 				$('.girdShow').load(function() {
 					$('.girdShow').css('visibility', 'visible');
@@ -358,17 +356,6 @@
 			$('#animationData').height(animationWidth);
 			$('#data').height(animationWidth);
 
-			window.addEventListener("popstate", function(e) {
-				window.history.go(-1);
-			}, false);
-
-			function pushHistory() {
-				var state = {
-					title: "Player Pager",
-					url: "#"
-				};
-				window.history.pushState(state, "Player Pager", "#");
-			}
 		</script>
 	</body>
 

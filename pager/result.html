@@ -16,6 +16,7 @@
 				margin: 0;
 				padding: 0;
 			}
+			
 			body,
 			html,
 			#container {
@@ -126,7 +127,7 @@
 						$('.shareimg').show();
 					}
 				});
-				pushHistory();
+
 				$('.shareimg').hide();
 
 				var str = getQueryString("img");
@@ -143,6 +144,7 @@
 
 				$(".topback").click(function() {
 					window.history.go(-2);
+//					window.location.href="../index.html";
 				});
 
 				$('#shareimg').click(function() {
@@ -157,6 +159,7 @@
 
 				$('.goback').click(function() {
 					window.history.go(-2);
+//					window.location.href="../index.html";
 				});
 			};
 
@@ -179,18 +182,7 @@
 				if(r != null) return unescape(r[2]);
 				return null;
 			}
-			
-			window.addEventListener("popstate", function(e) {
-				window.history.go(-2);
-			}, false);
 
-			function pushHistory() {
-				var state = {
-					title: "title",
-					url: "#"
-				};
-				window.history.pushState(state, "title", "#");
-			}
 		</script>
 	</body>
 
